@@ -30,7 +30,7 @@ function App() {
     // 1. 현재 에디터를 찾아서 참조한다.
     // useRef 로 보관한 내용물 참조(current)
     const editor = quillRef.current.getEditor();
-    // console.log(editor);
+    console.log(editor);
     // 2. js 로 <input type="file">을 생성한다.
     const input = document.createElement("input");
     // 3. js 로 속성을 셋팅한다.
