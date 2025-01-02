@@ -1,262 +1,141 @@
-# react-quill
+# Redux Toolkit (RTK)
 
-- 참고(WYSIWYG Editor)
-  : react-quill, CKEditor , Toast Editor, Tiptab
+- 전역 상태(즉, Context) 를 관리하는 `상태관리도구`
+  : Context API (리엑트 빌트인)
+  : Redux , Redux Toolkt, Recoil, Zustands
 
-## 설치
+## 관련 사이트
 
-- [react-quill 사이트](https://quilljs.com/docs/quickstart)
-- `npm i react-quill`
-- `npm i quill`
+- https://ko.redux.js.org/introduction/getting-started/
+- https://redux.js.org/
 
-## 실습
+## 레퍼런스 사이트에서 RTK 를 추천함
 
-- App,jsx
+- `npm install @reduxjs/toolkit`
+- `npm install redux`
+- `npm i react-redux`
+
+## RTK의 기본 예제(`순서를 준수`)
+
+- 학습순서는 `무조건 순서대로`
+- 폴더구조, 파일명 등등..
+
+- `src/store` 폴더 생성
+- `store.js` 파일 생성
+
+```js
+// store 설정
+//  store 는 전역에서 사용할 state를 말한다.
+//  회사에서는 /src/store 폴더를 주로 생성한다.
+//  store 는 1개만 만들 수 있다. => 전역 state 는 1개만 만들수 있다.
+import { configureStore } from "@reduxjs/toolkit";
+
+//  파일명은 주로 store.js 라고 칭한다.
+const store = configureStore({
+  reducer: {
+    // store 를 쪼개서 slice 해서 사용
+  },
+});
+```
+
+- `/src/features/counter 폴더` 생성
+- `/src/features/counter/counterSlice.js`
+
+```js
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+  count: 0,
+};
+
+// 코딩 컨벤션
+// Slice 는 store 를 쪼개서 사용한다는 의미
+const counterSlice = createSlice({
+  // 슬라이드 구분 이름(문자열)
+  name: "counterSlice",
+  // 슬라이스 초기 값(initialState: initialState 축약)
+  initialState,
+  // store/counterSlice 에 저장된 값 갱신 함수
+  //상태를 갱신해주는 함수
+  reducers: {
+    add: state => {
+      state.count += 1;
+    },
+    minus: state => {
+      state.count -= 1;
+    },
+    reset: state => {
+      state.count = 0;
+    },
+  },
+});
+// Reduce 함수를 외부로 내보내서 dispatch 해주도록
+// action : type 의 구분, payload 전달
+export const { add, minus, reset } = counterSlice.actions;
+export default counterSlice.reducer;
+```
+
+- `/src/store/store.js 폴더` 생성 (전역 state 보관장소)
+  : Slice 로 만든 reducer 배치
+
+  ```js
+  // store 설정
+  //  store 는 전역에서 사용할 state를 말한다.
+  //  회사에서는 /src/store 폴더를 주로 생성한다.
+  //  store 는 1개만 만들 수 있다. => 전역 state 는 1개만 만들수 있다.
+  import { configureStore } from "@reduxjs/toolkit";
+  // 카운터용 Reducer를 활용
+  import counterReducer from "../features/counter/countSlice";
+  //  파일명은 주로 store.js 라고 칭한다.
+  const store = configureStore({
+    reducer: {
+      // store 를 쪼개서 slice 해서 사용
+      counter: counterReducer,
+    },
+  });
+
+  export default store;
+  ```
+
+- `/src/components/Counter.jsx` 생성
 
 ```jsx
-import { useState } from "react";
-import ReactQuill from "react-quill";
-// import "quill/dist/quill.core.css";
-import "react-quill/dist/quill.snow.css";
+import { useDispatch, useSelector } from "react-redux";
+// store 에 저장된 Slice 중 어떤 Slice의 Action 을 쓸것인가
+import { add, minus, reset } from "../features/counter/countSlice";
+function Counter() {
+  // RTK 의 store 를 불러들여서 그중 counter 를 사용하겠다.
+  // 직접 state의 값에 접근
+  // const count = useSelector(state => state.counter.count);
+  // 객체 구조분해 할당으로 접근
+  const { count } = useSelector(state => state.counter);
+  // RTK 의 store 의 counter 의 값 갱신 dispatch 사용하겠다.
+  const dispatch = useDispatch();
 
-function App() {
-  const [data, setData] = useState("");
   return (
     <div>
-      <h1>Editor</h1>
-      <div style={{ width: "80%", margin: "0 auto" }}>
-        <form>
-          {/* <textarea></textarea> */}
-          <ReactQuill onChange={e => setData(e)} />
-        </form>
-      </div>
-      <div>
-        <h2>입력중인 데이터</h2>
-        <p>{data}</p>
-      </div>
+      <p>카운터 값 : {count}</p>
+      <button onClick={() => dispatch(add())}>증가</button>
+      <button onClick={() => dispatch(minus())}>감소</button>
+      <button onClick={() => dispatch(reset())}>리셋</button>
     </div>
   );
 }
-export default App;
+export default Counter;
 ```
 
-## `크로스 사이트 스크립트 공격` 가능성이 있다.
-
-- XSS 위험이 존재함.
-- 이를 방지하기 위한 라이브러리 설치가 필요
-  : https://www.npmjs.com/package/dompurify
-  : `npm i dompurify`
-
-  ```jsx
-  import { useState } from "react";
-  import ReactQuill from "react-quill";
-  // import "quill/dist/quill.core.css";
-  import "react-quill/dist/quill.snow.css";
-  // 읽어드릴때 js 관련 글자들을 특수한 글자로 변경한다.
-  import DOMPurify from "dompurify";
-
-  function App() {
-  const [data, setData] = useState("");
-  return (
-
-  <div>
-  <h1>Editor</h1>
-  <div style={{ width: "80%", margin: "0 auto" }}>
-  <form>
-  {/_ <textarea></textarea> _/}
-  <ReactQuill onChange={e => setData(e)} />
-  </form>
-  </div>
-  <div>
-  <h2>입력중인 데이터(서버에 보내줄 글자)</h2>
-  {/_ 백엔드로 보낼때 : <p>{data}</p>_/}
-  <p>{data}</p>
-  {/_ 아래처럼 내용을 출력하면 위험함 _/}
-  {/_ <p dangerouslySetInnerHTML={{ __html: data }} /> _/}
-  {/_ 최소한의 방어책 _/}
-  <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data) }} />
-  </div>
-  </div>
-  );
-  }
-  export default App;
-  ```
-
-## 이미지 처리
-
-- 이미지는 프론트엔드에서 직접 파일을 백엔드로 전송한다.
+- `/src/App.jsx` 에 Provider 셋팅 (`전역 store 접근`)
 
 ```jsx
-import { useEffect, useMemo, useRef, useState } from "react";
-import ReactQuill from "react-quill";
-// import "quill/dist/quill.core.css";
-import "react-quill/dist/quill.snow.css";
-// 읽어드릴때 js 관련 글자들을 특수한 글자로 변경한다.
-import DOMPurify from "dompurify";
-import axios from "axios";
+import { Provider } from "react-redux";
+import Counter from "./components/Counter";
 
 function App() {
-  const [data, setData] = useState("");
-
-  // useRef 는 React에서 html 태그 참조할때
-  const quillRef = useRef(null);
-  // 이메일 검증
-  const getEmailCheck = async () => {
-    try {
-      const res = await axios.get(`api/user/check-email=email=a@a.net`);
-      // console.log(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    getEmailCheck();
-  }, []);
-
-  // 이미지 처리(프론트에서 처리)
-  const imageHandler = () => {
-    // console.log("이미지처리하기");
-    // 1. 현재 에디터를 찾아서 참조한다.
-    // useRef 로 보관한 내용물 참조(current)
-    const editor = quillRef.current.getEditor();
-    // console.log(editor);
-    // 2. js 로 <input type="file">을 생성한다.
-    const input = document.createElement("input");
-    // 3. js 로 속성을 셋팅한다.
-    input.setAttribute("type", "file");
-    input.setAttribute("accept", "image/*");
-    console.log(input);
-    // 4. js 로 마치 <input type="file"> 을 클릭한 것처럼 실행한다.
-    input.click();
-    // 5. js 로 "change" 이벤트를 생성해 준다.
-    input.addEventListener("change", function () {
-      // console.log("이미지 선택");
-      try {
-        // 선택된 파일
-        const file = input.files[0];
-        // 임시 웹브라우저의 cache 이미지 URL 생성
-
-        // 백엔드 post 샘플 코드
-        // const formData = new FormData();
-        // formData.append("이름", file);
-        // const res = axios.post("주소", formData, {
-        //   headers: {
-        //     "Content-Type": "multipart/form-data",
-        //   },
-        // });
-
-        // let tempUrl = res.data;
-        // 정석적으로 백엔드에 axios.post 로 이미지 전송후
-        // 리턴 결과로 이미지의 URL을 받아온다.
-        // 받는 결과를 출력한다.(샘플)
-        let tempUrl = URL.createObjectURL(file);
-        tempUrl =
-          "https://i.namu.wiki/i/yHG3_20MxOUL3m1VlPJ8NRxVtRfk9MUUymDGMVFjr9Q2HT7zKI6CP9UdaFhIGipN6rBCY2KoYruBwJUJw6E38BVJDJmtIeZjZHvyW9pdn4Mruw5dQBGTLDG93ehgWZI45q7AOq3mHXWbNbVkTEyA_A.webp";
-        // console.log(tempUrl);
-        // 에디터에 배치하기
-        const range = editor.getSelection();
-        // tempUrl은 정확히 나온
-        editor.insertEmbed(range.index, "image", tempUrl);
-        // 강제로 마우스 커서 위치 이동하기
-        editor.setSelection(range.index + 1);
-      } catch (error) {
-        console.log(error);
-      }
-    });
-    // 6. 이벤트로 가상의 image url을 생성한다. (URL.createObjectURL)
-    // 7. 참조해둔 에디터에 img 태그를 밀어넣고 주소는 위의 주소를 넣는다.
-    // 8. 마우스 커서 위치를 조절한다.
-  };
-  // 모듈 활용
-  //  useMemo : 변수를 만들고 다시 생성되지 않도록 메모한다.
-  //  useMemo : 리랜더링시 변수를 다시 만들지 않는다.
-  const modules = useMemo(
-    () => ({
-      toolbar: {
-        container: [
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
-          [{ font: [] }],
-          [{ align: [] }],
-          ["bold", "italic", "underline", "strike", "blockquote"],
-          [{ list: "ordered" }, { list: "bullet" }, "link"],
-          [
-            {
-              color: [
-                "#000000",
-                "#e60000",
-                "#ff9900",
-                "#ffff00",
-                "#008a00",
-                "#0066cc",
-                "#9933ff",
-                "#ffffff",
-                "#facccc",
-                "#ffebcc",
-                "#ffffcc",
-                "#cce8cc",
-                "#cce0f5",
-                "#ebd6ff",
-                "#bbbbbb",
-                "#f06666",
-                "#ffc266",
-                "#ffff66",
-                "#66b966",
-                "#66a3e0",
-                "#c285ff",
-                "#888888",
-                "#a10000",
-                "#b26b00",
-                "#b2b200",
-                "#006100",
-                "#0047b2",
-                "#6b24b2",
-                "#444444",
-                "#5c0000",
-                "#663d00",
-                "#666600",
-                "#003700",
-                "#002966",
-                "#3d1466",
-                "custom-color",
-              ],
-            },
-            { background: [] },
-          ],
-          ["image", "video"],
-          ["clean"],
-        ],
-        // 이미지 관련해서는 내가 직접 처리할께.
-        handlers: {
-          image: imageHandler,
-        },
-      },
-    }),
-    [],
-  );
-
   return (
-    <div>
-      <h1>Editor</h1>
-      <div style={{ width: "80%", margin: "0 auto" }}>
-        <form>
-          {/* <textarea></textarea> */}
-          <ReactQuill
-            ref={quillRef}
-            onChange={e => setData(e)}
-            modules={modules}
-          />
-        </form>
-      </div>
-      <div>
-        <h2>입력중인 데이터(서버에 보내줄 글자)</h2>
-        {/* 백엔드로 보낼때 : <p>{data}</p>*/}
-        <p>{data}</p>
-        {/* 아래처럼 내용을 출력하면 위험함 */}
-        {/* <p dangerouslySetInnerHTML={{ __html: data }} /> */}
-        {/* 최소한의 방어책 */}
-        <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data) }} />
-      </div>
-    </div>
+    // 전역 store 를 활용함
+    <Provider store={store}>
+      <Counter />
+    </Provider>
   );
 }
 export default App;
