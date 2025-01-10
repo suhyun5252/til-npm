@@ -25,6 +25,7 @@ const todoSlice = createSlice({
     },
     // action id : 기존아이디
     // dispatch( deleteTodo(123456))
+
     deleteTodo: (state, action) => {
       state.filter(item => item.id !== action.payload);
     },
