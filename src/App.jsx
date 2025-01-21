@@ -1,8 +1,6 @@
+import PwForm from "./components/PwForm";
+
 function App() {
-  return (
-    <div className="bg-brand text-brand-dark p-72">
-      Custom Colors and Spacing
-    </div>
-  );
+  return <PwForm />;
 }
 export default App;
