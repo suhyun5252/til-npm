@@ -16,6 +16,7 @@ function App() {
       setLoginInfo(res.data.resultData);
       // 쿠키에 보관하기
       setCookie("accessToken", res.data.resultData.accessToken);
+      setCookie("refreshToken", res.data.resultData.refreshToken);
     } catch (error) {
       console.log(error);
     }
@@ -55,6 +56,7 @@ function Test() {
         },
       });
       console.log(res.data);
+      console.log(res.status);
       // 만약에 인증키 만료라면 UnAuthorized
       if (res.status === 401) {
         // 인증키가 만료되었다고 온다면
@@ -69,6 +71,8 @@ function Test() {
       }
     } catch (error) {
       console.log(error);
+
+      alert("서버가 불안정합니다.");
     }
   };
 
