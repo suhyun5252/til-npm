@@ -8,7 +8,6 @@ const initialState = {
 };
 // 비동기 작업
 // redux toolkit 에 있는 외부 Api 연동을 위한 AsyncThunk 만들기
-// 관례상 store에 user/ 메서드의 이름
 export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
   const res = await axios.get("https://jsonplaceholder.typicode.com/users");
   return res.data;
@@ -26,18 +25,18 @@ const userSlice = createSlice({
       console.log("사용자 정보 : ", state);
     },
   },
-  // 비동기 즉 api 연동 작업후 slice의 state 관리
+  // 비동기 즉, api 연동 작업후 slice 의 state 관리
   extraReducers: builder => {
     builder
       .addCase(fetchUser.pending, (state, action) => {
-        // 연결중...
+        // 연결중..
         // console.log("fetchUser.pending : ", action.payload);
         state.loading = true;
-        state.error = false;
-        // state.data = []; 데이터는 우리가 직접 처리 안하겠다.
+        state.error = null;
+        // state.data = [];
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
-        // 성공적 연결 및 데이터 출력
+        // 성공적 연결 및 데이터출력
         // console.log("fetchUser.fulfilled : ", action.payload);
         state.loading = false;
         state.error = null;

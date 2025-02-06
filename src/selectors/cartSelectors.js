@@ -1,10 +1,8 @@
-// 총금액 및 제품 총 수 구하기
-// 제품총수
-
 import { selector } from "recoil";
 import { cartAtom } from "../atoms/cartAtoms";
 import { productAtom } from "../atoms/productAtoms";
 
+// 총금액 구하기
 export const cartTotalSelector = selector({
   key: "cartTotal",
   get: ({ get }) => {
@@ -12,7 +10,6 @@ export const cartTotalSelector = selector({
     const cart = get(cartAtom);
     // 제품들
     const products = get(productAtom);
-    // return cart.reduce((결과값, 현재요소값) => 연산, 초기값);
     return cart.reduce((total, item) => {
       const product = products.find(pro => item.id === pro.id);
       // 전체 합산이 필요하다
@@ -23,8 +20,8 @@ export const cartTotalSelector = selector({
 });
 
 // 장바구니 제품총수 구하기
-export const cartItemTotalSelector = selector({
-  key: "cartItemTotal",
+export const cartItemCounterSelector = selector({
+  key: "cartItemCount",
   get: ({ get }) => {
     const cart = get(cartAtom);
     return cart.reduce((total, item) => total + item.qty, 0);

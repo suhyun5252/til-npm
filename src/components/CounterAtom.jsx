@@ -6,7 +6,7 @@ const CounterAtom = () => {
   const [isLogin, setIsLogin] = useRecoilState(loginAtom);
   return (
     <div>
-      <h1>로그인 상태 : {isLogin ? "로그인 중" : "로그아웃 중"}</h1>
+      <h1>로그인상태: {isLogin ? "로그인중" : "로그아웃 중"}</h1>
       <button onClick={() => setIsLogin(true)}>로그인</button>
       <button onClick={() => setIsLogin(false)}>로그아웃</button>
       <h1>CounterAtom : {count}</h1>

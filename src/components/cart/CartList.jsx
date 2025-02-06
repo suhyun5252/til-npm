@@ -3,7 +3,7 @@ import { cartAtom } from "../../atoms/cartAtoms";
 import CartItem from "./CartItem";
 import CartSummary from "./CartSummary";
 
-const CartList = () => {
+function CartList() {
   const cart = useRecoilValue(cartAtom);
   return (
     <div>
@@ -16,5 +16,5 @@ const CartList = () => {
       <CartSummary />
     </div>
   );
-};
+}
 export default CartList;
