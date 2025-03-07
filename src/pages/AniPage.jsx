@@ -1,18 +1,3 @@
-# Anime.js
-
-- https://animejs.com
-- https://velog.io/@bluestragglr/Anime.js-사용하기
-- https://www.npmjs.com/package/animejs
-
-```bash
-npm i animejs
-```
-
-## 코드 적용
-
-- /src/pages/AniPage.jsx 생성
-
-```jsx
 import anime from "animejs";
 
 import { useEffect } from "react";
@@ -91,4 +76,3 @@ const AniPage = () => {
   );
 };
 export default AniPage;
-```

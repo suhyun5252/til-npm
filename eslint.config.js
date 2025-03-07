@@ -35,6 +35,7 @@ export default [
         { allowConstantExport: true },
       ],
       "prettier/prettier": "warn",
+      "@typescript-eslint/no-unused-vars": "off",
     },
   },
 ];

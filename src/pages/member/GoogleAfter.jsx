@@ -55,7 +55,9 @@ const GoogleAfter = () => {
           <div>
             사용자 취미 <input type="text" />
           </div>
-          <button>회원가입</button>
+          <div>
+            <button>회원가입</button>
+          </div>
         </div>
       ) : (
         <p>사용자 정보를 불러오는 중...</p>
