@@ -1,94 +1,159 @@
-# Anime.js
+# Framer Motion
 
-- https://animejs.com
-- https://velog.io/@bluestragglr/Anime.js-사용하기
-- https://www.npmjs.com/package/animejs
+- https://motion.dev/docs/react-quick-start
+- https://velog.io/@keumky1/Framer-Motion-입문하기
+- https://examples.motion.dev/react
+- https://nykim.work/114
+
+## 설치하기
 
 ```bash
-npm i animejs
+npm install framer-motion
 ```
 
-## 코드 적용
+## 실습하기
 
-- /src/pages/AniPage.jsx 생성
+-/src/pages/Framer.jsx
 
 ```jsx
-import anime from "animejs";
-
-import { useEffect } from "react";
-import { useRef } from "react";
-
-const AniPage = () => {
-  const BoxWrap = {
-    position: "releative",
-    width: "100%",
-    height: "80vh",
-    backgroundColor: "yellowgreen",
-  };
-  const BoxStyle = {
-    position: "absolute",
-    left: 100,
-    top: 250,
-    width: 100,
-    height: 100,
-    backgroundColor: "red",
-  };
-
-  // 만약 html 이었으면 querySelector(".클래스명")
-  // React 이므로 useRef 로 html 태그를 참조한다.
-  const boxRef = useRef(null);
-  // 버튼 이벤트에서 anime 적용해보기
-  const motionA = () => {
-    anime({
-      targets: boxRef.current,
-      left: "240px",
-      backgroundColor: "#FFF",
-      borderRadius: ["0%", "50%"],
-      easing: "easeInOutQuad",
-    });
-  };
-  const motionB = () => {
-    anime({
-      targets: boxRef.current,
-      scale: 1.5,
-      duration: 2000,
-      backgroundColor: "#0F0",
-    });
-  };
-  const motionC = () => {
-    anime({
-      targets: boxRef.current,
-      scale: 1,
-      left: 0,
-      duration: 2000,
-      backgroundColor: "#F00",
-    });
-  };
-
-  // 실제 anime 적용해보기
-  useEffect(() => {
-    const box = boxRef.current;
-    // anime({
-    //   targets: box,
-    //   translateX: 150,
-    //   duration: 5000,
-    //   rotate: "1turn",
-    // });
-  }, []);
-
+import { motion } from "framer-motion";
+const Framer = () => {
   return (
     <div>
-      <h1>AniPage</h1>
-      <div>
-        <button onClick={motionA}>효과 1</button>
-        <button onClick={motionB}>효과 2</button>
-        <button onClick={motionC}>효과 3</button>
-      </div>
-      <div style={BoxWrap}>
-        <div style={BoxStyle} ref={boxRef}></div>
-      </div>
+      <h1>Framer Motion</h1>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 5 }}
+        style={{
+          width: 200,
+          height: 200,
+          backgroundColor: "red",
+          borderRadius: 10,
+        }}
+      >
+        애니메이션용 DIV
+      </motion.div>
     </div>
   );
 };
-export default AniPage;
+export default Framer;
+```
+
+```jsx
+import { motion } from "framer-motion";
+const Framer = () => {
+  const [visisible, setVisisible] = useState(false);
+  return (
+    <div>
+      <h1>Framer Motion</h1>
+      <button onClick={() => setVisisible(!visisible)}>실행</button>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: visisible ? 1 : 0 }}
+        transition={{ duration: 5 }}
+        style={{
+          width: 200,
+          height: 200,
+          backgroundColor: "red",
+          borderRadius: 10,
+        }}
+      >
+        애니메이션용 DIV
+      </motion.div>
+    </div>
+  );
+};
+export default Framer;
+```
+
+```jsx
+import { motion } from "framer-motion";
+import { useState } from "react";
+const Framer = () => {
+  const [move, setMove] = useState(false);
+  return (
+    <div>
+      <h1>Framer Motion</h1>
+      <button onClick={() => setMove(!move)}>실행</button>
+      <motion.div
+        initial={{ x: -100 }}
+        animate={{ x: move ? 200 : -100 }}
+        transition={{ duration: 0.5 }}
+        style={{
+          width: 200,
+          height: 200,
+          backgroundColor: "red",
+          borderRadius: 10,
+        }}
+      >
+        애니메이션용 DIV
+      </motion.div>
+    </div>
+  );
+};
+export default Framer;
+```
+
+```jsx
+import { motion } from "framer-motion";
+import { useState } from "react";
+const Framer = () => {
+  const [rot, setRot] = useState(false);
+  return (
+    <div>
+      <h1>Framer Motion</h1>
+      <button onClick={() => setRot(!rot)}>실행</button>
+      <motion.div
+        initial={{ rotate: 0 }}
+        animate={{ rotate: rot ? 360 : 0 }}
+        transition={{ duration: 0.5 }}
+        style={{
+          width: 200,
+          height: 200,
+          backgroundColor: "red",
+          borderRadius: 10,
+        }}
+      >
+        애니메이션용 DIV
+      </motion.div>
+    </div>
+  );
+};
+export default Framer;
+```
+
+```jsx
+import { motion } from "framer-motion";
+import { useState } from "react";
+const Framer = () => {
+  const [rot, setRot] = useState(false);
+  return (
+    <div>
+      <h1>Framer Motion</h1>
+      <button onClick={() => setRot(!rot)}>실행</button>
+      <motion.div
+        initial={{ rotate: 0 }}
+        animate={{ rotate: rot ? 360 : 0 }}
+        transition={{ duration: 0.5 }}
+        drag
+        dragConstraints={{
+          top: 0,
+          left: 0,
+          right: 500,
+          bottom: 500,
+        }}
+        style={{
+          width: 200,
+          height: 200,
+          backgroundColor: "red",
+          borderRadius: 10,
+        }}
+      >
+        애니메이션용 DIV
+      </motion.div>
+    </div>
+  );
+};
+export default Framer;
 ```
